@@ -1,0 +1,34 @@
+{
+    "arrangement": "triangle",
+    "gameDate": "Пт окт 23 19:36:00 2015",
+    "launchId": 666,
+    "maxMoveCount": 40,
+    "moves": [
+        [
+            7,
+            2,
+            7,
+            7
+        ],
+        [
+            7,
+            1,
+            7,
+            6
+        ],
+        [
+            7,
+            0,
+            7,
+            5
+        ]
+    ],
+    "players": [
+        "xxxnikitaxgodx",
+        "xxxvasyaxgodx"
+    ],
+    "result": [
+        true,
+        false
+    ]
+}

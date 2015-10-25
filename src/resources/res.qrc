@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../qml/main.qml</file>
+        <file>../qml/PreviewTab.qml</file>
+        <file>../qml/field/Corner.qml</file>
+        <file>../qml/field/CornersField.qml</file>
+        <file>test.json</file>
+    </qresource>
+</RCC>
