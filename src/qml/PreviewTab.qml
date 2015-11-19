@@ -12,7 +12,6 @@ View {
 
     id : previewBlock
 
-    height : Units.dp(700)
 
     property var log
 

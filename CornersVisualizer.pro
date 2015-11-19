@@ -1,13 +1,11 @@
 TEMPLATE = app
 
-QT += qml quick widgets
+QT += qml quick widgets xml svg
 
-SOURCES += main.cpp
+QTPLUGIN += qsvg@
 
-RESOURCES += qml.qrc
 
-# Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
+
 
 # Default rules for deployment.
-include(deployment.pri)
+include(src/deployment.pri)

@@ -61,6 +61,7 @@ ApplicationWindow {
             Action {
                 iconName: "image/color_lens"
                 name: "Выбрать цвета"
+                onTriggered: colorPicker.show()
             },
 
             Action {
@@ -154,7 +155,6 @@ ApplicationWindow {
 
                     clip: true
                     contentHeight: {
-                        print(previewPage.height)
                         return Math.max(previewPage.height+30)
                     }
 
@@ -162,7 +162,7 @@ ApplicationWindow {
                     PreviewTab {
                         id : previewPage
                         visible : selectedLog && ready
-                        anchors.centerIn: parent
+                        anchors.centerIn: flickable
                         log: selectedLog
 
                         onVisualizeTriggered: {
@@ -172,6 +172,7 @@ ApplicationWindow {
                         }
 
                         width : parent.width > Units.dp(700) ? Units.dp(700) : parent.width - 20
+                        height : Units.dp(630)
                     }
 
                 }
@@ -193,6 +194,77 @@ ApplicationWindow {
             }
         }  // end tab delegate
 
+    Dialog {
+            id: colorPicker
+            title: "Pick color"
+
+            property var primaryColor
+            property var accentColor
+            property var backgroundColor
+            positiveButtonText: "Done"
+
+            onOpened: {
+                primaryColor = theme.primaryColor
+                accentColor = theme.accentColor
+                backgroundColor = theme.backgroundColor
+            }
+
+            MenuField {
+                id: selection
+                model: ["Primary color", "Accent color", "Background color"]
+                width: Units.dp(160)
+            }
+
+            Grid {
+                columns: 7
+                spacing: Units.dp(8)
+
+                Repeater {
+                    model: [
+                        "red", "pink", "purple", "deepPurple", "indigo",
+                        "blue", "lightBlue", "cyan", "teal", "green",
+                        "lightGreen", "lime", "yellow", "amber", "orange",
+                        "deepOrange", "grey", "blueGrey", "brown", "black",
+                        "white"
+                    ]
+
+                    Rectangle {
+                        width: Units.dp(30)
+                        height: Units.dp(30)
+                        radius: Units.dp(2)
+                        color: Palette.colors[modelData]["500"]
+                        border.width: modelData === "white" ? Units.dp(2) : 0
+                        border.color: Theme.alpha("#000", 0.26)
+
+                        Ink {
+                            anchors.fill: parent
+
+                            onPressed: {
+                                switch(selection.selectedIndex) {
+                                    case 0:
+                                        theme.primaryColor = parent.color
+                                        break;
+                                    case 1:
+                                        theme.accentColor = parent.color
+                                        break;
+                                    case 2:
+                                        theme.backgroundColor = parent.color
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            onRejected: {
+                // TODO set default colors again but we currently don't know what that is
+                theme.primaryColor = primaryColor
+                theme.accentColor = accentColor
+                theme.backgroundColor = backgroundColor
+            }
+        }
+
 
         // component for push to the stack view
         Component {
@@ -202,6 +274,16 @@ ApplicationWindow {
                 property variant log : ({})
                 id: page
                 title : log.launchId
+
+                actions: [
+
+                    Action {
+                        iconName: "action/play_for_work"
+                        name: "Сделать ход"
+                        onTriggered: cornerField.goToNextStep()
+                    }
+
+                ]
 
                 onLogChanged: {
                     page.title = log.launchId

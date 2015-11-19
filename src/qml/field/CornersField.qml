@@ -37,6 +37,7 @@ Rectangle {
     }
 
 
+
     GridLayout{
         id : mainGrid
         z : 2

@@ -29,3 +29,13 @@ QVariantMap Bridge::getJsonFromFile(const QString &path)
     return jsonDocument.toVariant().toMap();
 }
 
+void Bridge::setSetting(const QString &key, const QVariant &value)
+{
+    m_settings.setValue(key,value);
+}
+
+QVariant Bridge::getSetting(const QString &key)
+{
+    return m_settings.value(key);
+}
+
