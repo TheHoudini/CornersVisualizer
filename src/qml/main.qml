@@ -18,8 +18,7 @@ ApplicationWindow {
 
 
     property var logs : []
-    property var selectedLog : 0
-
+    property var selectedLog : ({})
     title: "Визуализатор уголков"
 
     // Necessary when loading the window from C++
@@ -33,6 +32,8 @@ ApplicationWindow {
 
     Component.onCompleted: {
         var log = bridge.getJsonFromFile(":/test.json")
+        logs.push(log)
+        var log = bridge.getJsonFromFile("e:/test.txt")
         logs.push(log)
         // push don't emit notification abous changing property
         // but rewrite do
@@ -94,105 +95,91 @@ ApplicationWindow {
                             text: logs[index].launchId
                             subText: logs[index].gameDate
                             selected: selectedLog === logs[index]
-                            onClicked: selectedLog = logs[index]
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-        Loader {
-            anchors.fill: parent
-            asynchronous: true
-            sourceComponent: tabDelegate
-            onLoaded: {
-                item.logsData = selectedLog.log
-            }
-
-            visible: true
-        }
-
-
-
-    }
-
-    Component {
-            id: tabDelegate
-            Item {
-                Sidebar {
-                    id: sidebar
-
-                    expanded: !navDrawer.enabled
-
-                    Column {
-                        width: parent.width
-
-
-                        Repeater{
-                            model : main.logs
-                            ListItem.Subtitled {
-                                text: logs[index].launchId
-                                subText: logs[index].gameDate
-                                selected: selectedLog === logs[index]
-                                onClicked: selectedLog = logs[index]
+                            onClicked:     {
+                                selectedLog = logs[index]
+                                // простая замена исходника не вызывает слот on*Changed
+                                previewPageLoader.sourceComponent = null
+                                previewPageLoader.sourceComponent = previewTabComponent
+                                navDrawer.close()
                             }
                         }
                     }
                 }
+            }
+        }
 
 
-                Flickable {
-                    id: flickable
-                    anchors {
-                        left: sidebar.right
-                        right: parent.right
-                        top: parent.top
-                        bottom: parent.bottom
-                        margins: 14
-                    }
 
-                    clip: true
-                    contentHeight: {
-                        return Math.max(previewPage.height+30)
-                    }
+        Sidebar {
+            id: sidebar
+
+            expanded: !navDrawer.enabled
+
+            Column {
+                width: parent.width
 
 
-                    PreviewTab {
-                        id : previewPage
-                        visible : selectedLog && ready
-                        anchors.centerIn: flickable
-                        log: selectedLog
-
-                        onVisualizeTriggered: {
-                            var field = fieldComponent.createObject()
-                            field.log = selectedLog
-                            pageStack.push({item: field, destroyOnPop:true })
+                Repeater{
+                    model : main.logs
+                    ListItem.Subtitled {
+                        text: logs[index].launchId
+                        subText: logs[index].gameDate
+                        selected: selectedLog === logs[index]
+                        onClicked:     {
+                            selectedLog = logs[index]
+                            previewPageLoader.sourceComponent = null
+                            previewPageLoader.sourceComponent = previewTabComponent
                         }
-
-                        width : parent.width > Units.dp(700) ? Units.dp(700) : parent.width - 20
-                        height : Units.dp(630)
                     }
-
-                }
-
-                ProgressCircle {
-                    id: loadProgress
-                    visible: !previewPage.ready
-                    width: Units.dp(64)
-                    height: Units.dp(64)
-                    anchors.centerIn: flickable
-                    dashThickness: Units.dp(8)
-                    value: previewPage.progress
-
-
-                }
-                Scrollbar {
-                    flickableItem: flickable
                 }
             }
-        }  // end tab delegate
+        }
+
+        Loader{
+            id : previewPageLoader
+            anchors {
+                left: sidebar.right
+                right: parent.right
+                top: parent.top
+                bottom: parent.bottom
+                margins: 14
+            }
+            visible : status == Loader.Ready
+            asynchronous: true
+        }
+
+
+
+        ProgressCircle {
+            id: loadProgress
+            visible: previewPageLoader.status == Loader.Loading
+            width: Units.dp(64)
+            height: Units.dp(64)
+            anchors.centerIn: previewPageLoader
+            dashThickness: Units.dp(8)
+            value: previewPageLoader.progress
+
+
+        }
+    }
+
+
+
+
+
+    Component {
+        id : previewTabComponent
+        PreviewTab {
+            log: selectedLog
+            onVisualizeTriggered: {
+                     var field = fieldComponent.createObject()
+                     field.log = selectedLog
+                     pageStack.push({item: field, destroyOnPop:true })
+                 }
+        }
+    }
+
+
 
     Dialog {
             id: colorPicker
@@ -271,7 +258,11 @@ ApplicationWindow {
             id : fieldComponent
             TabbedPage {
 
-                property variant log : ({})
+                property var log : selectedLog
+                // ссылка на компонент поля
+                property var component
+                // ссылка на объект поля
+                property var object
                 id: page
                 title : log.launchId
 
@@ -280,16 +271,43 @@ ApplicationWindow {
                     Action {
                         iconName: "action/play_for_work"
                         name: "Сделать ход"
-                        onTriggered: cornerField.goToNextStep()
+                        onTriggered: field.goToNextStep()
                     }
 
                 ]
-
+                // скелет для динамической подгрузки удалённых модулей
                 onLogChanged: {
+
+                    component = Qt.createComponent(log.GameName+ "/field.qml")
+
+                    if (component.status === Component.Ready)
+                        finishCreation();
+                    else
+                        component.statusChanged.connect(finishCreation);
+                }
+
+                function finishCreation(){
+                    if (component.status === Component.Ready) {
+                        object = component.createObject(fieldView);
+                        if (object === null) {
+                            // Error Handling
+                            console.log("Error creating object");
+                            return
+                        }
+                        // если поле было успешно создано
+                        page.title = log.launchId
+                        object.fieldType = log.arrangement
+                        object.steps = log.moves
+                        object.init()
+                    } else if (component.status === Component.Error) {
+                        // Error Handling
+                        console.log("Error loading component:", component.errorString());
+                    }
+
                     page.title = log.launchId
                     cornerField.fieldType = log.arrangement
                     cornerField.steps = log.moves
-                    cornerField.loadCornersInStandardLocation()
+                    cornerField.init()
                 }
 
 
@@ -297,19 +315,13 @@ ApplicationWindow {
                     elevation: 1
                     anchors.fill: parent
                     anchors.margins: 14
-                    CornersField{
-                        id : cornerField
-                        anchors.fill: parent
-                        anchors.margins: 14
-                    }
+                    id : fieldView
                 }
 
 
 
             }
         }
-
-
 
 
 
