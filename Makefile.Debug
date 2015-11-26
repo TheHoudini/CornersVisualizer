@@ -57,7 +57,10 @@ DIST          = E:/DEV/CornersVisualizer/src/qml/main.qml \
 		E:/DEV/CornersVisualizer/src/qml/PreviewSeparator.qml \
 		E:/DEV/CornersVisualizer/src/qml/PreviewTab.qml \
 		E:/DEV/CornersVisualizer/src/qml/field/CornersField.qml \
-		E:/DEV/CornersVisualizer/src/qml/field/Corner.qml src\bridge.h src\main.cpp \
+		E:/DEV/CornersVisualizer/src/qml/field/Corner.qml \
+		E:/DEV/CornersVisualizer/src/qml/modules/corners/Corner.qml \
+		E:/DEV/CornersVisualizer/src/qml/modules/corners/Field.qml \
+		E:/DEV/CornersVisualizer/src/qml/modules/corners/Preview.qml src\bridge.h src\main.cpp \
 		src\bridge.cpp
 QMAKE_TARGET  = CornersVisualizer
 DESTDIR        = debug\ #avoid trailing-slash linebreak
@@ -168,10 +171,7 @@ compiler_rcc_clean:
 	-$(DEL_FILE) debug\qrc_res.cpp
 debug\qrc_res.cpp: src\resources\res.qrc \
 		src\resources\test.json \
-		src\qml\PreviewTab.qml \
-		src\qml\main.qml \
-		src\qml\field\Corner.qml \
-		src\qml\field\CornersField.qml
+		src\qml\main.qml
 	E:\program\qt\5.5\msvc2013\bin\rcc.exe -name res src\resources\res.qrc -o debug\qrc_res.cpp
 
 compiler_moc_header_make_all: debug\moc_bridge.cpp

@@ -10,7 +10,9 @@ View {
     property int fieldWidth : 8
     property int fieldHeight : 8
 
-    property string fieldType : ftSquare
+    property var fieldLog
+
+    property string fieldType : fieldLog.arrangement
     property string ftSquare : "square"
     property string ftRectangle : "rectangle"
     property string ftTriangle : "triangle"
@@ -18,16 +20,12 @@ View {
 
     property int baseStep : -1
 
-    property variant houseData : ({})
-    property variant steps : [
-        [7,2,4,7],
-        [7,1,4,6],
-        [7,0,4,5],
-    ]
-    property variant fieldData : []
+    property var houseData : ({})
+    property var steps : fieldLog.moves
+    property var fieldData : []
     property int currentStep : -1
 
-
+    signal stepFinished()
 
     Component.onCompleted: {
         loadBasicGrid()
@@ -171,20 +169,32 @@ View {
                         || ( houseData.isTriangle && j <= houseData.topHouse.right.x
                             && i <= houseData.topHouse.left.y && i+j <= 3))
                 {
-                    var newObject = cornerComponent.createObject(mainGrid.children[i*fieldWidth+j],{})
+                    var newObject = cornerComponent.createObject(mainGrid.children[i*fieldWidth+j])
                     newObject.backgroundColor = Theme.primaryColor
+                    newObject.animationFinished.connect(stepFinished)
                     fieldData[i][j] = 1
+
 
                 }else if( (i>= houseData.bottomHouse.left.y && j >= houseData.bottomHouse.left.x)
                          || ( houseData.isTriangle && j >= houseData.bottomHouse.left.y
                              && i >= houseData.bottomHouse.right.x && (i+j) >= 11 ))
                  {
                     newObject = cornerComponent.createObject(mainGrid.children[i*fieldWidth+j])
+                    newObject.animationFinished.connect(stepFinished)
                     fieldData[i][j] = 2
                  }
 
 
             }
+        }
+    }
+
+    function setAnimationDuration(ms)
+    {
+        for(var i = 0 ; i < mainGrid.children.length ; i++)
+        {
+
+            if(mainGrid.children[i].children[0]) mainGrid.children[i].children[0].animDuration = ms
         }
     }
 
@@ -213,7 +223,7 @@ View {
     }
 
     function goToNextStep(){
-        if(currentStep === steps.length)
+        if(currentStep === steps.length-1)
             return
 
         currentStep++
@@ -234,6 +244,7 @@ View {
     function goToStep(step){
         if(step === currentStep)
             return
+
         var fPlayerCorners = []
         var sPlayerCorners = []
 

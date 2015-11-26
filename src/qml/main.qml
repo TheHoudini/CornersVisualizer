@@ -3,7 +3,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
 import Material 0.1
 import Material.ListItems 0.1 as ListItem
-import "field"
 import corners.objects 1.0
 
 ApplicationWindow {
@@ -33,7 +32,7 @@ ApplicationWindow {
     Component.onCompleted: {
         var log = bridge.getJsonFromFile(":/test.json")
         logs.push(log)
-        var log = bridge.getJsonFromFile("e:/test.txt")
+        log = bridge.getJsonFromFile("e:/test.txt")
         logs.push(log)
         // push don't emit notification abous changing property
         // but rewrite do
@@ -57,6 +56,7 @@ ApplicationWindow {
 
         actionBar.maxActionCount: 3
 
+        property var previewBlockObject
         actions: [
 
             Action {
@@ -97,9 +97,7 @@ ApplicationWindow {
                             selected: selectedLog === logs[index]
                             onClicked:     {
                                 selectedLog = logs[index]
-                                // простая замена исходника не вызывает слот on*Changed
-                                previewPageLoader.sourceComponent = null
-                                previewPageLoader.sourceComponent = previewTabComponent
+                                page.loadPreviewBlock(selectedLog)
                                 navDrawer.close()
                             }
                         }
@@ -107,6 +105,8 @@ ApplicationWindow {
                 }
             }
         }
+
+
 
 
 
@@ -127,8 +127,7 @@ ApplicationWindow {
                         selected: selectedLog === logs[index]
                         onClicked:     {
                             selectedLog = logs[index]
-                            previewPageLoader.sourceComponent = null
-                            previewPageLoader.sourceComponent = previewTabComponent
+                            page.loadPreviewBlock(selectedLog)
                         }
                     }
                 }
@@ -144,10 +143,25 @@ ApplicationWindow {
                 bottom: parent.bottom
                 margins: 14
             }
+
             visible : status == Loader.Ready
             asynchronous: true
+
+            // обработка сигналов динамически подгруженного блока превью
+            onLoaded:  previewConnector.target = item
+            Connections {
+                id : previewConnector
+                ignoreUnknownSignals: true
+                onVisualizeTriggered : pageStack.push(fieldComponent)
+            }
+
         }
 
+
+        function loadPreviewBlock(log)
+        {
+            previewPageLoader.setSource("modules/" + log.gameName + "/Preview.qml",{"log": log})
+        }
 
 
         ProgressCircle {
@@ -167,17 +181,7 @@ ApplicationWindow {
 
 
 
-    Component {
-        id : previewTabComponent
-        PreviewTab {
-            log: selectedLog
-            onVisualizeTriggered: {
-                     var field = fieldComponent.createObject()
-                     field.log = selectedLog
-                     pageStack.push({item: field, destroyOnPop:true })
-                 }
-        }
-    }
+
 
 
 
@@ -259,55 +263,31 @@ ApplicationWindow {
             TabbedPage {
 
                 property var log : selectedLog
-                // ссылка на компонент поля
-                property var component
-                // ссылка на объект поля
-                property var object
                 id: page
                 title : log.launchId
 
-                actions: [
+                property var _fieldObj
+                property var _controlObj
 
-                    Action {
-                        iconName: "action/play_for_work"
-                        name: "Сделать ход"
-                        onTriggered: field.goToNextStep()
-                    }
 
-                ]
-                // скелет для динамической подгрузки удалённых модулей
                 onLogChanged: {
 
-                    component = Qt.createComponent(log.GameName+ "/field.qml")
+                    var component = Qt.createComponent("modules/" + log.gameName+ "/Field.qml")
+                    _fieldObj = component.createObject(fieldView,{"anchors.fill" : fieldView});
 
-                    if (component.status === Component.Ready)
-                        finishCreation();
-                    else
-                        component.statusChanged.connect(finishCreation);
-                }
 
-                function finishCreation(){
-                    if (component.status === Component.Ready) {
-                        object = component.createObject(fieldView);
-                        if (object === null) {
-                            // Error Handling
-                            console.log("Error creating object");
-                            return
-                        }
-                        // если поле было успешно создано
-                        page.title = log.launchId
-                        object.fieldType = log.arrangement
-                        object.steps = log.moves
-                        object.init()
-                    } else if (component.status === Component.Error) {
-                        // Error Handling
-                        console.log("Error loading component:", component.errorString());
-                    }
+                    component = Qt.createComponent("modules/" + log.gameName+ "/Control.qml")
+                    _controlObj = component.createObject(actionSheet,{"anchors.fill" : actionSheet});
 
+
+                    _fieldObj.fieldLog = log
+                    _controlObj.fieldObj = _fieldObj
+
+
+                    actions = _controlObj.actionList
                     page.title = log.launchId
-                    cornerField.fieldType = log.arrangement
-                    cornerField.steps = log.moves
-                    cornerField.init()
+
+                    if(_controlObj.init) _controlObj.init()
                 }
 
 
@@ -317,7 +297,13 @@ ApplicationWindow {
                     anchors.margins: 14
                     id : fieldView
                 }
+                BottomSheet {
+                    id: actionSheet
 
+                    maxHeight: main.height/3
+                    height : main.height/4 * 2
+
+                }
 
 
             }

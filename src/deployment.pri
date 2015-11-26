@@ -38,7 +38,11 @@ DISTFILES += \
     $$PWD/qml/PreviewSeparator.qml \
     $$PWD/qml/PreviewTab.qml \
     $$PWD/qml/field/CornersField.qml \
-    $$PWD/qml/field/Corner.qml
+    $$PWD/qml/field/Corner.qml \
+    $$PWD/qml/modules/corners/Corner.qml \
+    $$PWD/qml/modules/corners/Field.qml \
+    $$PWD/qml/modules/corners/Preview.qml \
+    $$PWD/qml/modules/corners/Control.qml
 
 
 
