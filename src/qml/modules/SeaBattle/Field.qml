@@ -27,6 +27,7 @@ View {
 
     signal stepFinished()
 
+    property bool moveIsActive
     Component.onCompleted: {
         loadBasicGrid()
         loadCornersInStandardLocation()
@@ -171,7 +172,7 @@ View {
                 {
                     var newObject = cornerComponent.createObject(mainGrid.children[i*fieldWidth+j])
                     newObject.backgroundColor = Theme.primaryColor
-                    newObject.animationFinished.connect(stepFinished)
+                    newObject.animationFinished.connect(function(){ moveIsActive = false ; stepFinished()})
                     fieldData[i][j] = 1
 
 
@@ -180,7 +181,7 @@ View {
                              && i >= houseData.bottomHouse.right.x && (i+j) >= 11 ))
                  {
                     newObject = cornerComponent.createObject(mainGrid.children[i*fieldWidth+j])
-                    newObject.animationFinished.connect(stepFinished)
+                    newObject.animationFinished.connect(function(){ moveIsActive = false ; stepFinished()})
                     fieldData[i][j] = 2
                  }
 
@@ -204,7 +205,6 @@ View {
         var cornerParent = xyItem(x1,y1)
 
 
-
         cornerTarget.reparentTo(cornerParent)
         imposeMoveToField(x0,y0,x1,y1)
 
@@ -223,8 +223,9 @@ View {
     }
 
     function goToNextStep(){
-        if(currentStep === steps.length-1)
+        if(currentStep === steps.length-1 || moveIsActive)
             return
+        moveIsActive = true
 
         currentStep++
         var step = steps[currentStep]
@@ -232,8 +233,9 @@ View {
     }
 
     function goToPrevStep(){
-        if(currentStep <0)
+        if(currentStep <0 || moveIsActive)
             return
+        moveIsActive = true
         var step = steps[currentStep]
         makeMove(step[2],step[3],step[0],step[1])
         currentStep--
@@ -244,6 +246,8 @@ View {
     function goToStep(step){
         if(step === currentStep)
             return
+
+        moveIsActive = false
 
         var fPlayerCorners = []
         var sPlayerCorners = []

@@ -7,6 +7,7 @@ ActionButton {
     id : cornerBtn
     property variant newParent : cornerBtn
     property int animDuration : 1000
+    property bool fast : false
     width :  Math.min(parent.width,parent.height)*0.8
     height : width
     anchors.centerIn: parent
@@ -33,14 +34,19 @@ ActionButton {
 
 
     transitions: Transition {
+        id : mainTransition
         from : "*"
         to : "move"
         onRunningChanged: {
-            if(!running)
+            if(!running && !fast)
             {
                 anchors.centerIn = newParent
                 state = "ready"
                 animationFinished()
+            }else if(fast)
+            {
+                newParent = parent
+                state = "ready"
             }
         }
 
@@ -52,6 +58,7 @@ ActionButton {
 
     function reparentTo(par)
     {
+        fast = false
         if(cornerBtn.state == "move")
             return
         newParent = par
@@ -60,8 +67,15 @@ ActionButton {
 
     function fastReparentTo(par)
     {
+        if(mainTransition.running)
+        {
+            fast = true
+            anim.stop()
+        }
         cornerBtn.parent = par
     }
+
+
 
 }
 

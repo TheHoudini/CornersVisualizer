@@ -35,6 +35,12 @@ Item {
     }
 
     property list<Action> actionList : [
+
+        Action {
+            iconName: "AV/skip_previous"
+            name: "Предыдущий ход"
+            onTriggered: if(_isStarted)fieldObj.goToPrevStep()
+        },
         Action {
             iconName: _isStarted ? "AV/stop" :"AV/play_arrow"
             name: _isStarted ? "Стоп" : "Cтарт"
@@ -46,7 +52,12 @@ Item {
             onTriggered: _isPaused = !_isPaused
         },
         Action {
-            iconName: "action/eject"
+            iconName: "AV/skip_next"
+            name: "Следующий ход"
+            onTriggered: if(_isStarted)fieldObj.goToNextStep()
+        },
+        Action {
+            iconName: "action/build"
             name: "Управление"
             onTriggered: actionSheet.open()
         }
@@ -70,13 +81,16 @@ Item {
             Slider {
                 id : stepSlider
                 Layout.fillWidth: true
-                value: 0
+                value: fieldObj.currentStep+1
                 tickmarksEnabled: true
                 numericValueLabel: true
                 stepSize: 1
                 minimumValue: 0
                 maximumValue: log.moves.length
-                onValueChanged: fieldObj.goToStep(value-1)
+                onValueChanged: {
+                    fieldObj.goToStep(value-1)
+                }
+                onPressedChanged: _isPaused = true
                 anchors.bottom: stepLbl.bottom
             }
 
@@ -90,6 +104,7 @@ Item {
             }
 
             Slider {
+                id : speedSlider
                 value: 1000
                 Layout.fillWidth: true
                 minimumValue: 500
@@ -118,6 +133,7 @@ Item {
     function init()
     {
         fieldObj.init()
+        fieldObj.setAnimationDuration(speedSlider.value)
     }
 }
 
