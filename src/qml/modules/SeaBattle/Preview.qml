@@ -73,13 +73,13 @@ Item {
                         id : previewIcon
                         height :  parent.height/2
                         width : height
-                        Field {
+                        Icon {
                             id : previewIconLoader
                             // Explicitly set the size of the
                             // Loader to the parent item's size
-                            anchors.fill: parent
-                            steps: log.moves
-                            fieldType: log.arrangement
+                            size : Math.min(parent.width,parent.height)
+                            color:  Theme.primaryColor
+                            source:  Qt.resolvedUrl("image/logo.svg")
                         }
 
 
@@ -138,9 +138,6 @@ Item {
                                     anchors.topMargin: 4
                                     width : Units.dp(20)
                                     height: Units.dp(20)
-                                    Corner{
-                                        backgroundColor: Theme.primaryColor
-                                    }
                                 }
 
                                 Label{
@@ -157,9 +154,6 @@ Item {
                                     anchors.topMargin: 4
                                     width : Units.dp(20)
                                     height: Units.dp(20)
-                                    Corner{
-                                        backgroundColor: Theme.accentColor
-                                    }
                                 }
 
                                 Label{
@@ -285,60 +279,25 @@ Item {
 
 
                     anchors.topMargin: 8
-                    Field{
+                    Loader{
                         id : previewFLoader
                         Layout.fillWidth: true
                         Layout.fillHeight: true
-                        Layout.minimumHeight: 20
-                        Layout.maximumWidth: parent.height
                         Layout.minimumWidth: 20
-                        steps: log.moves
-                        fieldType: log.arrangement
-                        baseStep: 0
+                        Layout.minimumHeight: width/3
+                        asynchronous: false
+                        onLoaded: {
+                            item.fieldLog = log
+                        }
+                        source : "Field.qml"
                         MouseArea {
                             anchors.fill: parent
                             onClicked : {
-                                _overlayStep = 0
+                                _overlayStep = -1
                                 previewOverlay.open(previewFLoader)
                             }
                         }
 
-                    }
-                    Field{
-                        id: previewSLoader
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.minimumHeight: 20
-                        Layout.maximumWidth: parent.height
-                        Layout.minimumWidth: 20
-                        steps: log.moves
-                        fieldType: log.arrangement
-                        baseStep: 1
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked : {
-                                _overlayStep = 1
-                                previewOverlay.open(previewSLoader)
-                            }
-                        }
-                    }
-                    Field{
-                        id : previewTLoader
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.minimumHeight: 20
-                        Layout.maximumWidth: parent.height
-                        Layout.minimumWidth: 20
-                        steps: log.moves
-                        fieldType: log.arrangement
-                        baseStep: 2
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked : {
-                                _overlayStep = 2
-                                previewOverlay.open(previewTLoader)
-                            }
-                        }
                     }
 
                 }
@@ -356,14 +315,12 @@ Item {
                 height : main.height/6*4
                 width : main.width/6*4
                 onOpened: {
-                    overlayLoader.goToStep(_overlayStep)
                 }
 
                 Field{
                     id : overlayLoader
                     anchors.fill: parent
-                    steps: log.moves
-                    fieldType: log.arrangement
+                    fieldLog: log
                 }
 
 

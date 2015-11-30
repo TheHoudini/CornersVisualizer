@@ -24,7 +24,6 @@ QVariantMap Bridge::getJsonFromFile(const QString &path)
         return QVariantMap();
     }
 
-
     QJsonDocument jsonDocument = QJsonDocument::fromJson(file.readAll());
     return jsonDocument.toVariant().toMap();
 }

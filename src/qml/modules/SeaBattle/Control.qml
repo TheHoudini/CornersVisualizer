@@ -20,14 +20,6 @@ Item {
     }
 
 
-    on_IsStartedChanged: {
-        if(_isStarted && !_isPaused)
-        {
-            fieldObj.goToNextStep()
-        }else{
-            fieldObj.goToStep(-1)
-        }
-    }
 
     on_IsPausedChanged: {
         if(!_isPaused && _isStarted)
@@ -132,8 +124,7 @@ Item {
 
     function init()
     {
-        fieldObj.init()
-        fieldObj.setAnimationDuration(speedSlider.value)
+        if (fieldObj.init) fieldObj.init()
     }
 }
 

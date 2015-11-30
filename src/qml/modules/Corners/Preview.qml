@@ -73,13 +73,13 @@ Item {
                         id : previewIcon
                         height :  parent.height/2
                         width : height
-                        Field {
+                        Icon {
                             id : previewIconLoader
                             // Explicitly set the size of the
                             // Loader to the parent item's size
-                            anchors.fill: parent
-                            steps: log.moves
-                            fieldType: log.arrangement
+                            size : Math.min(parent.width,parent.height)
+                            color:  Theme.primaryColor
+                            source:  Qt.resolvedUrl("image/logo.svg")
                         }
 
 

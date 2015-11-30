@@ -30,9 +30,11 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        var log = bridge.getJsonFromFile(":/test.json")
+        var log = bridge.getJsonFromFile("e:/Corners.log")
         logs.push(log)
-        log = bridge.getJsonFromFile("e:/test.txt")
+
+
+        log = bridge.getJsonFromFile("e:/SeaBattle.log")
         logs.push(log)
         // push don't emit notification abous changing property
         // but rewrite do
@@ -152,7 +154,7 @@ ApplicationWindow {
             Connections {
                 id : previewConnector
                 ignoreUnknownSignals: true
-                onVisualizeTriggered : pageStack.push(fieldComponent)
+                onVisualizeTriggered : stackLoader.sourceComponent = fieldComponent
             }
 
         }
@@ -178,11 +180,22 @@ ApplicationWindow {
     }
 
 
+    pageStack.onPopped: {
+        pageStack.pop()
+        stackLoader.sourceComponent = undefined
+    }
 
 
+    Loader{
+        id: stackLoader
+        visible : false
+        asynchronous: true
+        onStatusChanged: if(status === Loader.Ready) itemReady()
+    }
 
-
-
+    function itemReady(){
+        pageStack.push(stackLoader.item)
+    }
 
 
     Dialog {
@@ -271,7 +284,6 @@ ApplicationWindow {
 
 
                 onLogChanged: {
-
                     var component = Qt.createComponent("modules/" + log.gameName+ "/Field.qml")
                     _fieldObj = component.createObject(fieldView,{"anchors.fill" : fieldView});
 
