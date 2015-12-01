@@ -10,20 +10,25 @@ Item {
     property bool _isStarted
     property bool _isPaused
 
-    Connections {
-        target : fieldObj
-        ignoreUnknownSignals: true
-        onStepFinished : {
-            if(!_isStarted || _isPaused) return
-            fieldObj.goToNextStep()
-        }
-    }
 
-
+    signal openRequest()
 
     on_IsPausedChanged: {
         if(!_isPaused && _isStarted)
             fieldObj.goToNextStep()
+    }
+
+    on_IsStartedChanged: {
+        if(!_isStarted)
+            fieldObj.goToStep(-1)
+    }
+
+    Timer{
+        id : timer
+        interval: 1000
+        running : !_isPaused && _isStarted
+        repeat: true
+        onTriggered: fieldObj.goToNextStep()
     }
 
     property list<Action> actionList : [
@@ -51,7 +56,7 @@ Item {
         Action {
             iconName: "action/build"
             name: "Управление"
-            onTriggered: actionSheet.open()
+            onTriggered: openRequest()
         }
 
     ]
@@ -82,6 +87,7 @@ Item {
                 onValueChanged: {
                     fieldObj.goToStep(value-1)
                 }
+
                 onPressedChanged: _isPaused = true
                 anchors.bottom: stepLbl.bottom
             }
@@ -99,9 +105,9 @@ Item {
                 id : speedSlider
                 value: 1000
                 Layout.fillWidth: true
-                minimumValue: 500
-                maximumValue: 10000
-                onValueChanged: fieldObj.setAnimationDuration(value)
+                minimumValue: 100
+                maximumValue: 5000
+                onValueChanged: timer.interval = value
 
 
             }

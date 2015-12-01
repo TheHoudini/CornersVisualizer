@@ -23,7 +23,8 @@ ApplicationWindow {
     // Necessary when loading the window from C++
     visible: true
 
-
+    property int saveX
+    property int saveY
     //object with bridged data(c++)
     Bridge {
         id : bridge
@@ -39,6 +40,7 @@ ApplicationWindow {
         // push don't emit notification abous changing property
         // but rewrite do
         logs = logs
+        pageStack.push(page)
     }
 
 
@@ -51,7 +53,7 @@ ApplicationWindow {
 
 
 
-    initialPage: TabbedPage {
+     TabbedPage {
         id: page
 
         title: "Визуализатор уголков"
@@ -150,11 +152,14 @@ ApplicationWindow {
             asynchronous: true
 
             // обработка сигналов динамически подгруженного блока превью
-            onLoaded:  previewConnector.target = item
+            onLoaded: {
+                previewConnector.target = item
+                item.open(0,0)
+            }
             Connections {
                 id : previewConnector
                 ignoreUnknownSignals: true
-                onVisualizeTriggered : stackLoader.sourceComponent = fieldComponent
+                onVisualizeTriggered : pageStack.push(fieldComponent)
             }
 
         }
@@ -177,24 +182,6 @@ ApplicationWindow {
 
 
         }
-    }
-
-
-    pageStack.onPopped: {
-        pageStack.pop()
-        stackLoader.sourceComponent = undefined
-    }
-
-
-    Loader{
-        id: stackLoader
-        visible : false
-        asynchronous: true
-        onStatusChanged: if(status === Loader.Ready) itemReady()
-    }
-
-    function itemReady(){
-        pageStack.push(stackLoader.item)
     }
 
 
@@ -282,39 +269,71 @@ ApplicationWindow {
                 property var _fieldObj
                 property var _controlObj
 
-
-                onLogChanged: {
-                    var component = Qt.createComponent("modules/" + log.gameName+ "/Field.qml")
-                    _fieldObj = component.createObject(fieldView,{"anchors.fill" : fieldView});
-
-
-                    component = Qt.createComponent("modules/" + log.gameName+ "/Control.qml")
-                    _controlObj = component.createObject(actionSheet,{"anchors.fill" : actionSheet});
-
-
-                    _fieldObj.fieldLog = log
-                    _controlObj.fieldObj = _fieldObj
-
-
-                    actions = _controlObj.actionList
-                    page.title = log.launchId
-
+                property bool isLoaded : fieldViewLoader.status === Loader.Ready && bottomSheetLoader.status === Loader.Ready
+                onIsLoadedChanged: {
+                    if(!isLoaded)return
+                    waveAnimation.open(14,14)
+                    bottomSheetLoader.item.fieldObj = fieldViewLoader.item
+                    page.actions = bottomSheetLoader.item.actionList
                     if(_controlObj.init) _controlObj.init()
                 }
 
+                onLogChanged: {
+                    page.title = log.launchId
+                    fieldViewLoader.setSource("modules/" + log.gameName+ "/Field.qml",{"fieldLog" : log})
+                    bottomSheetLoader.setSource("modules/" + log.gameName+ "/Control.qml")
+                }
+
+
+
 
                 View{
-                    elevation: 1
+                    elevation: 0
                     anchors.fill: parent
                     anchors.margins: 14
                     id : fieldView
+
+                    Wave{
+                        id : waveAnimation
+                        onFinished: {
+                            fieldView.elevation = 1
+                            fieldViewLoader.visible = true
+                        }
+                    }
+                    Loader{
+                        visible: false
+                        id : fieldViewLoader
+                        asynchronous: true
+                        anchors.fill: parent
+                    }
+                    ProgressCircle {
+                        visible: fieldViewLoader.status == Loader.Loading
+                        width: parent.width/2
+                        height: parent.height/2
+                        anchors.centerIn: parent
+                        dashThickness: Units.dp(8)
+
+
+                    }
+
                 }
                 BottomSheet {
-                    id: actionSheet
-
+                    id: bottomSheet
                     maxHeight: main.height/3
                     height : main.height/4 * 2
+                    Loader{
+                        id : bottomSheetLoader
+                        visible: isLoaded
+                        active: fieldViewLoader.status == Loader.Ready
+                        anchors.fill: parent
+                        asynchronous: true
+                    }
 
+                    Connections{
+                        ignoreUnknownSignals: true
+                        target : bottomSheetLoader.status === Loader.Ready ? bottomSheetLoader.item : 0
+                        onOpenRequest : bottomSheet.open()
+                    }
                 }
 
 

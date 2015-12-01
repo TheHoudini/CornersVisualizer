@@ -13,6 +13,10 @@ Item {
         updateAllFields()
     }
 
+    function open(x,y)
+    {
+        waveAnim.open(x,y)
+    }
 
     property var _overlayStep
 
@@ -37,10 +41,19 @@ Item {
         }
 
         View {
-            elevation: 1
+            elevation: 0
 
             id : previewBlock
 
+
+            Wave{
+                id : waveAnim
+                onFinished: {
+
+                    previewBlock.elevation = 1
+                    previewColumn.visible = true
+                }
+            }
 
 
             Item{
@@ -62,6 +75,7 @@ Item {
             anchors.margins: 14
             Column {
                 id : previewColumn
+                visible: false
                 anchors.margins: 14
                 anchors.fill: parent
                 RowLayout {

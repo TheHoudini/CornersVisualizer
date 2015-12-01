@@ -10,6 +10,8 @@ Item {
     property bool _isStarted
     property bool _isPaused
 
+    signal openRequest()
+
     Connections {
         target : fieldObj
         ignoreUnknownSignals: true
@@ -59,7 +61,7 @@ Item {
         Action {
             iconName: "action/build"
             name: "Управление"
-            onTriggered: actionSheet.open()
+            onTriggered: openRequest()
         }
 
     ]
@@ -80,6 +82,7 @@ Item {
 
             Slider {
                 id : stepSlider
+                enabled: _isStarted
                 Layout.fillWidth: true
                 value: fieldObj.currentStep+1
                 tickmarksEnabled: true
@@ -132,7 +135,6 @@ Item {
 
     function init()
     {
-        fieldObj.init()
         fieldObj.setAnimationDuration(speedSlider.value)
     }
 }

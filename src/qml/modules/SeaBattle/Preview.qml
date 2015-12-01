@@ -13,6 +13,10 @@ Item {
         updateAllFields()
     }
 
+    function open(x,y)
+    {
+        waveAnim.open(x,y)
+    }
 
     property var _overlayStep
 
@@ -23,8 +27,8 @@ Item {
     Flickable {
         id: flickable
         anchors.fill: parent
-        anchors.topMargin: height > Units.dp(700) ? (height - Units.dp(700))/2 : 0
-        contentHeight: Units.dp(700)
+        anchors.topMargin: height > Units.dp(800) ? (height - Units.dp(800))/2 : 0
+        contentHeight: Units.dp(800)
 
 
         clip: true
@@ -37,17 +41,24 @@ Item {
         }
 
         View {
-            elevation: 1
+            elevation: 0
 
             id : previewBlock
 
+            Wave{
+                id : waveAnim
+                onFinished: {
 
+                    previewBlock.elevation = 1
+                    previewColumn.visible = true
+                }
+            }
 
             Item{
                 anchors.fill: parent
             }
-            width : parent.width > Units.dp(700) ? Units.dp(700) : parent.width
-            height: Units.dp(700)
+            width : parent.width > Units.dp(800) ? Units.dp(800) : parent.width
+            height: Units.dp(800)
 
 
             anchors.top : parent.top
@@ -62,6 +73,7 @@ Item {
             anchors.margins: 14
             Column {
                 id : previewColumn
+                visible : false
                 anchors.margins: 14
                 anchors.fill: parent
                 RowLayout {

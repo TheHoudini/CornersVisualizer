@@ -9,37 +9,86 @@ Item {
     property int currentStep : -1
 
     property bool firstPlayerActive : true
-
+    property int shootInRow : 0
     property int fpHits : 0
     property int spHits : 0
 
 
+    property var stepFpActive : []
+    property bool isInited : false
+
     function init(){
+    }
+
+    function getStepArr()
+    {
+        var arr = []
+        firstPlayerActive = true
+        for(var i = 0 ; i <= fieldLog.moves.length-1 ; i++)
+        {
+
+            arr[i] = firstPlayerActive
+            var activeField = firstPlayerActive ? firstField : secondField
+            if(!activeField.check(fieldLog.moves[i][0],fieldLog.moves[i][1])){
+                firstPlayerActive = !firstPlayerActive
+            }
+        }
+        firstPlayerActive = true
+        return arr;
     }
 
     function goToNextStep()
     {
         if(currentStep >= fieldLog.moves.length-1)
             return
-        currentStep++
-        var activeField = firstPlayerActive ? firstField : secondField
-        if( activeField.shoot(fieldLog.moves[currentStep][0],fieldLog.moves[currentStep][1]) )
+
+
+        if(currentStep !== -1)
         {
-            if(firstPlayerActive) fpHits++ ; else spHits++
-        }else
-            firstPlayerActive = !firstPlayerActive
+            firstPlayerActive = getStepArr()[currentStep]
+            var activeField = firstPlayerActive ? firstField : secondField
+            if(!activeField.check(fieldLog.moves[currentStep][0],fieldLog.moves[currentStep][1]))
+                firstPlayerActive = !firstPlayerActive
+        }
+
+        activeField = firstPlayerActive ? firstField : secondField
+
+
+        currentStep++
+        if(firstPlayerActive) fpHits++ ; else spHits++
+        activeField.shoot(fieldLog.moves[currentStep][0],fieldLog.moves[currentStep][1])
+
+
     }
 
     function goToPrevStep(){
         if(currentStep < 0)
             return
+        firstPlayerActive = getStepArr()[currentStep]
+
+
+        if(firstPlayerActive) fpHits-- ; else spHits--
         var activeField = firstPlayerActive ? firstField : secondField
         activeField.unshoot(fieldLog.moves[currentStep][0],fieldLog.moves[currentStep][1])
         var hits = firstPlayerActive ? fpHits : spHits
-        hits--
         currentStep--;
-        if(hits === 0 || !activeField.check(fieldLog.moves[currentStep][0],fieldLog.moves[currentStep][1]))
-            firstPlayerActive = !firstPlayerActive
+
+    }
+
+
+
+    function goToStep(step){
+
+        print(currentStep , step)
+        if(step< currentStep)
+        {
+            print("here")
+            while(currentStep !== step )
+                goToPrevStep()
+        }else if(step > currentStep){
+            while(currentStep !== step )
+                goToNextStep()
+        }
 
     }
 
@@ -48,20 +97,20 @@ Item {
         View{
             Layout.fillHeight: true
             Layout.fillWidth: true
-            Layout.minimumHeight: 25
+            Layout.minimumHeight: width
             Layout.minimumWidth: 25
             elevation: 1
             PlayerField{
                 id  : firstField
                 anchors.fill: parent
                 basicMatrix: fieldLog.player1Position
-                anchors.margins: Units.dp(10)
 
             }
         }
 
         View{
             elevation: 1
+            id : midView
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: Units.dp(50)
@@ -124,7 +173,6 @@ Item {
             PlayerField{
                 id : secondField
                 anchors.fill: parent
-                anchors.margins: Units.dp(10)
                 basicMatrix: fieldLog.player1Position
             }
 
