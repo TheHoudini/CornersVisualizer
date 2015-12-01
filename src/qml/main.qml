@@ -324,7 +324,6 @@ ApplicationWindow {
                     Loader{
                         id : bottomSheetLoader
                         visible: isLoaded
-                        active: fieldViewLoader.status == Loader.Ready
                         anchors.fill: parent
                         asynchronous: true
                     }

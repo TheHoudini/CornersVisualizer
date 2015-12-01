@@ -1,8 +1,6 @@
 import QtQuick 2.5
 import QtQuick.Layouts 1.1
-import QtQuick.Window 2.0
 import Material 0.1
-import Material.ListItems 0.1 as ListItem
 
 Item {
     property var fieldLog
@@ -13,11 +11,10 @@ Item {
     property int fpHits : 0
     property int spHits : 0
 
-
-    property var stepFpActive : []
     property bool isInited : false
 
     function init(){
+
     }
 
     function getStepArr()
@@ -94,19 +91,16 @@ Item {
 
     RowLayout{
         anchors.fill: parent
-        View{
+        PlayerField{
+            id  : firstField
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: width
             Layout.minimumWidth: 25
-            elevation: 1
-            PlayerField{
-                id  : firstField
-                anchors.fill: parent
-                basicMatrix: fieldLog.player1Position
+            basicMatrix: fieldLog.player1Position
 
-            }
         }
+
 
         View{
             elevation: 1
@@ -164,19 +158,16 @@ Item {
 
         }
 
-        View{
-            elevation: 1
+        PlayerField{
+            id : secondField
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: 25
             Layout.minimumWidth: 25
-            PlayerField{
-                id : secondField
-                anchors.fill: parent
-                basicMatrix: fieldLog.player1Position
-            }
-
+            basicMatrix: fieldLog.player1Position
         }
+
+
 
 
     }
