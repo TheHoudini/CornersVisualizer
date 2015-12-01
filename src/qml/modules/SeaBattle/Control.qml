@@ -108,20 +108,6 @@ Item {
                 minimumValue: 100
                 maximumValue: 5000
                 onValueChanged: timer.interval = value
-
-
-            }
-            ListItem.Standard {
-                text: "Тестовый итем"
-                visible: true
-                enabled: true
-
-                onClicked: timePicker.show()
-                action: Icon {
-                    anchors.centerIn: parent
-                    name: "Action/history"
-                    size: Units.dp(32)
-                }
             }
         }
 

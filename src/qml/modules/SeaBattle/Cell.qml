@@ -9,6 +9,8 @@ Item {
         color: isActive ? Theme.primaryColor : "transparent"
         anchors.fill: parent
     }
+
+
     Icon {
         id : icon
         visible : false
@@ -18,8 +20,17 @@ Item {
         size : Math.min(parent.width,parent.height)
     }
 
+    Ink{
+        id : ink
+        visible : false
+        anchors.fill: parent
+    }
+
     function shoot(){
+        ink.visible = true
+        ink.createTapCircle(ink.x+ink.height/2,ink.y+ink.width/2)
         icon.visible = true
+        ink.cancel()
         return isActive
     }
 
@@ -27,6 +38,7 @@ Item {
         icon.visible = false
         return isActive
     }
+
 
 
 }

@@ -53,9 +53,6 @@ Item {
                 }
             }
 
-            Item{
-                anchors.fill: parent
-            }
             width : parent.width > Units.dp(800) ? Units.dp(800) : parent.width
             height: Units.dp(800)
 
