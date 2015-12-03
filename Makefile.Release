@@ -61,13 +61,14 @@ DIST          = E:/DEV/CornersVisualizer/src/qml/main.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/corners/Preview.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/corners/Control.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Control.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Corner.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Field.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Preview.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Control.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Corner.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Field.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Preview.qml src\bridge.h src\main.cpp \
+		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Preview.qml \
+		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Cell.qml \
+		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/PlayerField.qml \
+		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Field.qml src\bridge.h src\main.cpp \
 		src\bridge.cpp
 QMAKE_TARGET  = CornersVisualizer
 DESTDIR        = release\ #avoid trailing-slash linebreak
@@ -649,7 +650,46 @@ release\bridge.obj: src\bridge.cpp src/bridge.h \
 		..\..\program\qt\5.5\msvc2013\include\QtCore\qjsonobject.h \
 		..\..\program\qt\5.5\msvc2013\include\QtCore\QJsonArray \
 		..\..\program\qt\5.5\msvc2013\include\QtCore\qjsonarray.h \
-		..\..\program\qt\5.5\msvc2013\include\QtCore\QVariant
+		..\..\program\qt\5.5\msvc2013\include\QtCore\QVariant \
+		..\..\program\qt\5.5\msvc2013\include\QtWidgets\QFileDialog \
+		..\..\program\qt\5.5\msvc2013\include\QtWidgets\qfiledialog.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qdir.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qfileinfo.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qurl.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qurlquery.h \
+		..\..\program\qt\5.5\msvc2013\include\QtWidgets\qdialog.h \
+		..\..\program\qt\5.5\msvc2013\include\QtWidgets\qwidget.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qwindowdefs.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qwindowdefs_win.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qmargins.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qpaintdevice.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qrect.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qsize.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qpalette.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qcolor.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qrgb.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qbrush.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qmatrix.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qpolygon.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qregion.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qdatastream.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qline.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qtransform.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qpainterpath.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qimage.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qpixelformat.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qpixmap.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qsharedpointer.h \
+		..\..\program\qt\5.5\msvc2013\include\QtCore\qsharedpointer_impl.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qfont.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qfontmetrics.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qfontinfo.h \
+		..\..\program\qt\5.5\msvc2013\include\QtWidgets\qsizepolicy.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qcursor.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qkeysequence.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qevent.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qvector2d.h \
+		..\..\program\qt\5.5\msvc2013\include\QtGui\qtouchdevice.h
 
 release\moc_bridge.obj: release\moc_bridge.cpp 
 

@@ -18,28 +18,18 @@ ApplicationWindow {
 
     property var logs : []
     property var selectedLog : ({})
-    title: "Визуализатор уголков"
+    title: "Визуализатор"
 
     // Necessary when loading the window from C++
     visible: true
 
-    property int saveX
-    property int saveY
     //object with bridged data(c++)
     Bridge {
         id : bridge
     }
 
     Component.onCompleted: {
-        var log = bridge.getJsonFromFile("e:/Corners.log")
-        logs.push(log)
-
-
-        log = bridge.getJsonFromFile("e:/SeaBattle.log")
-        logs.push(log)
-        // push don't emit notification abous changing property
-        // but rewrite do
-        logs = logs
+        logs = bridge.getArray("logs")
         pageStack.push(page)
     }
 
@@ -62,6 +52,12 @@ ApplicationWindow {
 
         property var previewBlockObject
         actions: [
+
+            Action {
+                iconName : "content/add"
+                name : "Добавить лог"
+                onTriggered: logPicker.show()
+            },
 
             Action {
                 iconName: "image/color_lens"
@@ -167,7 +163,7 @@ ApplicationWindow {
 
         function loadPreviewBlock(log)
         {
-            previewPageLoader.setSource("modules/" + log.gameName + "/Preview.qml",{"log": log})
+            previewPageLoader.setSource("modules/" + log.game.toLowerCase() + "/Preview.qml",{"log": log})
         }
 
 
@@ -257,6 +253,66 @@ ApplicationWindow {
         }
 
 
+
+    Snackbar {
+        id: snackbar
+    }
+    Dialog {
+            id : logPicker
+            property string filePath
+            property var log
+            onFilePathChanged: {
+                if(!filePath) return;
+                var tmp =  bridge.getJsonFromFile(filePath)
+                if(tmp.game && (tmp.game.toLowerCase() === "seafight" || tmp.game.toLowerCase() === "corners"))
+                {
+                    snackbar.open("Корректный лог, имя игры : " + (tmp.game.toLowerCase() === "seafight"  ? "Морской бой" : "Уголки")  )
+                    pathLbl.text = filePath
+                    log = tmp
+                }else{
+                    filePath = ""
+                    log = ""
+                    snackbar.open("Некорректный лог")
+                }
+
+            }
+            MenuField {
+                id: logType
+                Layout.fillWidth: true
+                model: ["Файл", "Ссылка"]
+                width: parent.width
+            }
+            onAccepted: {
+                if(log)
+                {
+                    logs.push(new Object(log))
+                    bridge.setArray("logs",logs)
+                    filePath = ""
+                    log = undefined
+                    logs = logs
+                }
+            }
+
+            RowLayout{
+                anchors.left: parent.left
+                anchors.right: parent.right
+                Label {
+                    id : pathLbl
+                    Layout.fillWidth: true
+                    Layout.alignment: Qt.AlignCenter
+                    text: "Выберите файл"
+                }
+                Button{
+                    id : pathBtn
+                    text: "Выбрать"
+                    onClicked: logPicker.filePath = bridge.getFilePath()
+                }
+            }
+
+        }
+
+
+
         // component for push to the stack view
         Component {
             id : fieldComponent
@@ -280,8 +336,8 @@ ApplicationWindow {
 
                 onLogChanged: {
                     page.title = log.launchId
-                    fieldViewLoader.setSource("modules/" + log.gameName+ "/Field.qml",{"fieldLog" : log})
-                    bottomSheetLoader.setSource("modules/" + log.gameName+ "/Control.qml")
+                    fieldViewLoader.setSource("modules/" + log.game.toLowerCase()+ "/Field.qml",{"fieldLog" : log})
+                    bottomSheetLoader.setSource("modules/" + log.game.toLowerCase()+ "/Control.qml")
                 }
 
 

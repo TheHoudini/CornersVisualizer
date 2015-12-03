@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets xml svg
+QT += qml quick xml svg
 
 QTPLUGIN += qsvg@
 
