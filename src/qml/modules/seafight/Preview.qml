@@ -8,16 +8,11 @@ import Material.ListItems 0.1 as ListItem
 Item {
 
     property var log
-    onLogChanged: {
-        updateAllFields()
-    }
 
     function open(x,y)
     {
         waveAnim.open(x,y)
     }
-
-    property var _overlayStep
 
 
     signal visualizeTriggered()
@@ -287,25 +282,39 @@ Item {
 
 
                     anchors.topMargin: 8
+
                     Loader{
                         id : previewFLoader
+                        active : false
+                        visible : status === Loader.Ready
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.minimumWidth: 20
                         Layout.minimumHeight: width/3
-                        asynchronous: false
+                        asynchronous: true
                         onLoaded: {
                             item.fieldLog = log
                         }
                         source : "Field.qml"
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked : {
-                                _overlayStep = -1
-                                previewOverlay.open(previewFLoader)
-                            }
-                        }
 
+
+
+                    }
+                    ActionButton{
+                        visible : !previewFLoader.active
+                        anchors.centerIn: previewRowLayout
+                        iconName: "AV/replay"
+                        backgroundColor: Theme.primaryColor
+                        onClicked: previewFLoader.active = true
+                    }
+
+                    ProgressCircle {
+                        id: loadProgress
+                        visible: previewFLoader.status == Loader.Loading
+                        width: Units.dp(64)
+                        height: Units.dp(64)
+                        anchors.centerIn: previewRowLayout
+                        dashThickness: Units.dp(8)
                     }
 
                 }
@@ -316,23 +325,7 @@ Item {
             }
 
 
-            // overlay for preview fields
 
-            OverlayView{
-                id : previewOverlay
-                height : main.height/6*4
-                width : main.width/6*4
-                onOpened: {
-                }
-
-                Field{
-                    id : overlayLoader
-                    anchors.fill: parent
-                    fieldLog: log
-                }
-
-
-            }
 
 
 

@@ -174,7 +174,6 @@ ApplicationWindow {
             height: Units.dp(64)
             anchors.centerIn: previewPageLoader
             dashThickness: Units.dp(8)
-            value: previewPageLoader.progress
 
 
         }

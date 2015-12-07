@@ -43,15 +43,15 @@ DISTFILES += \
     $$PWD/qml/modules/corners/Field.qml \
     $$PWD/qml/modules/corners/Preview.qml \
     $$PWD/qml/modules/corners/Control.qml \
-    $$PWD/qml/modules/SeaBattle/Control.qml \
-    $$PWD/qml/modules/SeaBattle/Preview.qml \
     $$PWD/qml/modules/Ñorners/Control.qml \
     $$PWD/qml/modules/Ñorners/Corner.qml \
     $$PWD/qml/modules/Ñorners/Field.qml \
     $$PWD/qml/modules/Ñorners/Preview.qml \
-    $$PWD/qml/modules/SeaBattle/Cell.qml \
-    $$PWD/qml/modules/SeaBattle/PlayerField.qml \
-    $$PWD/qml/modules/SeaBattle/Field.qml
+    $$PWD/qml/modules/seafight/Cell.qml \
+    $$PWD/qml/modules/seafight/Control.qml \
+    $$PWD/qml/modules/seafight/Field.qml \
+    $$PWD/qml/modules/seafight/PlayerField.qml \
+    $$PWD/qml/modules/seafight/Preview.qml
 
 
 

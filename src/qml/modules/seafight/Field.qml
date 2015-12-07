@@ -7,15 +7,9 @@ Item {
     property int currentStep : -1
 
     property bool firstPlayerActive : true
-    property int shootInRow : 0
     property int fpHits : 0
     property int spHits : 0
 
-    property bool isInited : false
-
-    function init(){
-
-    }
 
     function getStepArr()
     {

@@ -60,15 +60,10 @@ DIST          = E:/DEV/CornersVisualizer/src/qml/main.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/corners/Field.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/corners/Preview.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/corners/Control.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Control.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Preview.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Control.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Corner.qml \
 		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Field.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Preview.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Cell.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/PlayerField.qml \
-		E:/DEV/CornersVisualizer/src/qml/modules/SeaBattle/Field.qml src\bridge.h src\main.cpp \
+		E:/DEV/CornersVisualizer/src/qml/modules/Ñorners/Preview.qml src\bridge.h src\main.cpp \
 		src\bridge.cpp
 QMAKE_TARGET  = CornersVisualizer
 DESTDIR        = debug\ #avoid trailing-slash linebreak

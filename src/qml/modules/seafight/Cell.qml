@@ -3,19 +3,12 @@ import Material 0.1
 
 Item {
     property bool isActive : false
-    Rectangle{
-        id : rect
-        visible: isActive
-        color: isActive ? Theme.primaryColor : "transparent"
-        anchors.fill: parent
-    }
-
 
     Icon {
         id : icon
         visible : false
         anchors.centerIn: parent
-        name : "Content/clear"
+        source:  !isActive ?  Qt.resolvedUrl("image/bomb.svg") : Qt.resolvedUrl("image/hit.svg")
         color: Theme.accentColor
         size : Math.min(parent.width,parent.height)
     }
@@ -23,6 +16,7 @@ Item {
     Ink{
         id : ink
         visible : false
+        focusColor: Theme.accentColor
         anchors.fill: parent
     }
 
