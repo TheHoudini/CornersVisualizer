@@ -39,22 +39,22 @@ Item {
     property list<Action> actionList : [
 
         Action {
-            iconName: "AV/skip_previous"
+            iconName: "av/skip_previous"
             name: "Предыдущий ход"
             onTriggered: if(_isStarted)fieldObj.goToPrevStep()
         },
         Action {
-            iconName: _isStarted ? "AV/stop" :"AV/play_arrow"
+            iconName: _isStarted ? "av/stop" :"av/play_arrow"
             name: _isStarted ? "Стоп" : "Cтарт"
             onTriggered: _isStarted = !_isStarted
         },
         Action {
-            iconName: _isPaused ? "AV/replay" : "AV/pause"
+            iconName: _isPaused ? "av/replay" : "av/pause"
             name: _isPaused ? "Возобновить" : "Пауза"
             onTriggered: _isPaused = !_isPaused
         },
         Action {
-            iconName: "AV/skip_next"
+            iconName: "av/skip_next"
             name: "Следующий ход"
             onTriggered: if(_isStarted)fieldObj.goToNextStep()
         },

@@ -30,6 +30,12 @@ ApplicationWindow {
 
     Component.onCompleted: {
         logs = bridge.getArray("logs")
+        if(logs.length === 0)
+        {
+            logs.push(bridge.getJsonFromFile(":/qml/modules/seafight/log/log.log"))
+            logs.push(bridge.getJsonFromFile(":/qml/modules/corners/log/Corners.log"))
+            logs = logs
+        }
         pageStack.push(page)
     }
 
@@ -46,7 +52,7 @@ ApplicationWindow {
      TabbedPage {
         id: page
 
-        title: "Визуализатор уголков"
+        title: "Визуализатор"
 
         actionBar.maxActionCount: 3
 
@@ -351,7 +357,7 @@ ApplicationWindow {
                     Wave{
                         id : waveAnimation
                         onFinished: {
-                            fieldView.elevation = 1
+                            visible = false
                             fieldViewLoader.visible = true
                         }
                     }

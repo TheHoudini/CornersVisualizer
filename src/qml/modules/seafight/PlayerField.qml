@@ -53,7 +53,6 @@ View {
     }
 
     function syncShips(){
-        printArr(basicMatrix)
         var ships1It = 0
         var ships2It = 0
         var ships3It = 0

@@ -9,8 +9,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     qmlRegisterType<Bridge>("corners.objects",1,0,"Bridge");
-    engine.load(QUrl("src/qml/main.qml"));
-    engine.setOutputWarningsToStandardError(false);
+    engine.load(QUrl("qrc:/qml/main.qml"));
 
 
 

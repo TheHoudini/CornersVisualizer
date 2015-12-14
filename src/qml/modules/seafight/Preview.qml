@@ -303,7 +303,7 @@ Item {
                     ActionButton{
                         visible : !previewFLoader.active
                         anchors.centerIn: previewRowLayout
-                        iconName: "AV/replay"
+                        iconName: "av/replay"
                         backgroundColor: Theme.primaryColor
                         onClicked: previewFLoader.active = true
                     }

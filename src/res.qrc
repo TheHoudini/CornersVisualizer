@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/modules/corners/image/logo.svg</file>
+        <file>qml/modules/corners/Control.qml</file>
+        <file>qml/modules/corners/Corner.qml</file>
+        <file>qml/modules/corners/Field.qml</file>
+        <file>qml/modules/corners/Preview.qml</file>
+        <file>qml/modules/seafight/image/bomb.svg</file>
+        <file>qml/modules/seafight/image/field.svg</file>
+        <file>qml/modules/seafight/image/hit.svg</file>
+        <file>qml/modules/seafight/image/logo.svg</file>
+        <file>qml/modules/seafight/image/ship1.svg</file>
+        <file>qml/modules/seafight/image/ship2.svg</file>
+        <file>qml/modules/seafight/image/ship2_v.svg</file>
+        <file>qml/modules/seafight/image/ship3.svg</file>
+        <file>qml/modules/seafight/image/ship3_v.svg</file>
+        <file>qml/modules/seafight/image/ship4.svg</file>
+        <file>qml/modules/seafight/image/ship4_v.svg</file>
+        <file>qml/modules/seafight/Cell.qml</file>
+        <file>qml/modules/seafight/Control.qml</file>
+        <file>qml/modules/seafight/Field.qml</file>
+        <file>qml/modules/seafight/PlayerField.qml</file>
+        <file>qml/modules/seafight/Preview.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/modules/corners/log/Corners.log</file>
+        <file>bridge.cpp</file>
+        <file>bridge.h</file>
+        <file>main.cpp</file>
+        <file>qml/modules/seafight/log/log.log</file>
+    </qresource>
+</RCC>

@@ -85,6 +85,7 @@ Item {
 
     RowLayout{
         anchors.fill: parent
+        //spacing: Units.dp(30)
         PlayerField{
             id  : firstField
             Layout.fillHeight: true

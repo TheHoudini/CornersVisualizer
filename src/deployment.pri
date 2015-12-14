@@ -55,7 +55,8 @@ DISTFILES += \
 
 
 
-RESOURCES +=
+RESOURCES += \
+    $$PWD/res.qrc
 
 HEADERS += \
     $$PWD/bridge.h
